@@ -7,20 +7,26 @@
 var todoList = {
 //adds todo to todo list and completed boolean
     addTodo: function(todoText){
-    this.todos.push({
-      todoText: todoText,
-      completed: false
-    });
+    if(todoText){
+      this.todos.push({
+        todoText: todoText,
+        completed: false
+      });
+    }
     this.displayTodos();
   },
 //changes todo at position provided by user
   changeTodo: function(position, todoText){
+    if(this.todos[position]){
     this.todos[position].todoText = todoText;
+    }
     this.displayTodos();
   },
 //deletes todo
   deleteTodo: function(position){
+    if(this.todos[position]){
     this.todos.splice(position,1);
+    }
     this.displayTodos();
   },
 //displays Todos (to console)
@@ -71,8 +77,10 @@ var todoList = {
 
   },//toggles completed property of todo list item
   toggleCompleted: function(position){
-     var todo= this.todos[position];
+    if(this.todos[position]){
+    var todo= this.todos[position];
     todo.completed = !todo.completed;
+    }
     this.displayTodos();
   }
 };
@@ -91,13 +99,11 @@ var handlers ={
   addTodo: function(){
     //note: index.html has javascript so this is called on click and enter keyup
     var addTodoTextInput = document.getElementById('addTodoTextInput');
-    //check if value was input, does not add to todo list blank values
-    if(addTodoTextInput.value){
-      todoList.addTodo(addTodoTextInput.value);
-      changeBorderColor();
-    }
+    todoList.addTodo(addTodoTextInput.value);
     addTodoTextInput.value='';
     changeBackgroundImage();
+    changeBorderColor();
+
 
   },changeTodo: function(){
     //note: index.html has javascript so this is called on click and enter keyup
@@ -108,12 +114,14 @@ var handlers ={
       changeTodoTextInput.value='';
       changeBackgroundImage();
       changeBorderColor();
+    
   },deleteTodo:function(){
       var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
       todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
       deleteTodoPositionInput.value='';
       changeBackgroundImage();
       changeBorderColor();
+    
   },toggleCompleted:function(){
       var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
       todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
