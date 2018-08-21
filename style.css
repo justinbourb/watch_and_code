@@ -4,14 +4,14 @@ body {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   margin: 2em;
   #background-image: url("https://cdn.glitch.com/bd95dd45-4969-4a27-bb99-f39e5440171f%2Fcat.jpg?1534705250842")
-  
+
 }
 h1{
   color: #373fff;
 }
 h1,h2 {
   font-style: italic;
-  
+
 }
 #titleArea{
   background-color:rgba(255, 255, 255, 0.5);
@@ -45,7 +45,7 @@ button{
 #todoList:hover{
   backgroud-color:white;
 }
-#changeTodoPositionInput{
+.numberInput{
   width: 30px;
 }
 
@@ -54,13 +54,13 @@ button{
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   text-align: center;  
+   text-align: center;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   text-align: center;  
+   text-align: center;
 }
 
-:-ms-input-placeholder {  
-   text-align: center; 
+:-ms-input-placeholder {
+   text-align: center;
 }
