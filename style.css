@@ -45,6 +45,16 @@ button{
 #todoList:hover{
   background-color:white;
 }
+li{
+  border-radius: 25px;
+  border-width:2px;
+  border-style:solid;
+  min-width: 100px;
+}
+
+ul {
+  list-style: none;
+}
 .numberInput{
   width: 30px;
 }
