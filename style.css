@@ -43,7 +43,7 @@ button{
   padding: 5px;
 }
 #todoList:hover{
-  backgroud-color:white;
+  background-color:white;
 }
 .numberInput{
   width: 30px;
