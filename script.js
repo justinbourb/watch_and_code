@@ -114,14 +114,14 @@ var handlers ={
       changeTodoTextInput.value='';
       changeBackgroundImage();
       changeBorderColor();
-
+    
   },deleteTodo:function(){
       var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
       todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
       deleteTodoPositionInput.value='';
       changeBackgroundImage();
       changeBorderColor();
-
+    
   },toggleCompleted:function(){
       var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
       todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
@@ -129,9 +129,7 @@ var handlers ={
       changeBackgroundImage();
       changeBorderColor();
 
-
   }};
-
 
 //functionality - new cat image in background every function call (lol)
 function changeBackgroundImage() {
