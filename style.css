@@ -25,31 +25,35 @@ h1,h2 {
 
 /* Add a background color on hover */
 .buttonGroup button:hover {
-    #background-color: #3e8e41;
   background-color:white;
 }
 button{
   width:100px;
+  border-radius: 25px;
 }
 #todoList{
-  background-color:rgba(255, 255, 255, 0.5);
+  background-color:rgba(255, 255, 255, 0.75);
   display:inline-block;
-  border-radius: 25px;
-  border-width:2px;
+  border-width:10px;
   border-style:solid;
   min-width: 100px;
   visibility: hidden;
   margin-top: 20px;
   padding: 5px;
 }
-#todoList:hover{
-  background-color:white;
-}
+
 li{
   border-radius: 25px;
   border-width:2px;
   border-style:solid;
   min-width: 100px;
+  text-align: center;
+  padding: 10px 5px;
+  margin: 10px 0 10px 0;
+}
+
+li:hover{
+  background-color:hsl(58, 100%, 98%);
 }
 
 ul {

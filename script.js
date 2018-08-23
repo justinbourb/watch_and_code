@@ -135,20 +135,25 @@ var handlers ={
 var views={
 //display Todos by creating <li> items for each todo
   displayTodos: function(){
+    var todoLiCounter = 0;
     var todosUl = document.querySelector('ul');
     //reset innerHTML to '' to prevent duplicate entries showing up
     todosUl.innerHTML='';
     if (todoList.todos.length===0){
       //console.log('Your todo list is empty.')
       var todosLi = document.createElement('li');
+      todosLi.setAttribute("id", "li0");
       todosLi.textContent = "Your todo list is empty.";
       todosUl.appendChild(todosLi);
       return
     }
     for (var i=0; i<todoList.todos.length; i++){
       var todosLi = document.createElement('li');
+      //create a unqiue ID for each li element for css styling reasons
+      todosLi.setAttribute("id", "li"+i);
       todosLi.textContent = todoList.todos[i].todoText;
       todosUl.appendChild(todosLi);
+      todoLiCounter++;
     }
   },
   
@@ -173,20 +178,12 @@ function changeBorderColor(){
   var randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
   document.getElementById("todoList").style.borderColor=randomColor;
   document.getElementById("todoList").style.visibility="visible";
-  document.querySelector("li").style.borderColor=randomColor;
+  var numberofLiElements = document.getElementById("todoList").getElementsByTagName("li").length;
+  for (var i = 0; i <=numberofLiElements; i++){
+    randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
+    var uniqueId="li"+i;
+    document.getElementById(uniqueId).style.borderColor=randomColor;
+  };
   document.querySelector("li").style.visibility="visible";
 };
 
-//when creating li elements I need to make a counter and create unqiue id's for each element
-// example: id="li1", id="li2", id="li3"
-//then when in changeBorderColor() I need to apply the styling to every li
-// right now it is only styling the first element
-// goal, each li has a different color border - it will look wild when they all change at once
-// because why not?
-
-// document.getElementById("ul_o").getElementsByTagName("li").length
-//var TextElements = document.getElementsByName("ptext1");
-
-// for (var i = 0, max = TextElements.length; i < max; i++) {
-//     TextElements[i].style.display = "none";
-// }
