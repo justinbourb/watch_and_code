@@ -140,18 +140,36 @@ var views={
     //reset innerHTML to '' to prevent duplicate entries showing up
     todosUl.innerHTML='';
     if (todoList.todos.length===0){
-      //console.log('Your todo list is empty.')
+      //displays 'Your todo list is empty.' in ul element
       var todosLi = document.createElement('li');
       todosLi.setAttribute("id", "li0");
       todosLi.textContent = "Your todo list is empty.";
       todosUl.appendChild(todosLi);
       return
     }
+    
+    
+    // see https://stackoverflow.com/questions/40228152/css-js-checked-checkbox-should-line-out-an-li-element-in-a-to-do-list-applic?rq=1
+    //TODO: toggle completed yes/no in todoList.todos when check box is checked or unchecked
+    //TODO: remove toggle button, make toggle all button activate checkboxes
+    //TODO: make delete button only available when boxes are checked, if boxes checked >1 => delete button
+    // will say delete multiple
     for (var i=0; i<todoList.todos.length; i++){
+    //create checkboxes to go with Li elements with unique id
+      var todosLiCheckbox = document.createElement("input"); 
+      todosLiCheckbox.setAttribute("type", "checkbox");
+      todosLiCheckbox.setAttribute("id", "liCheckbox"+i);
+    //create labels for checkboxes
+    var label = document.createElement("label");
+      label.setAttribute("for", "liCheckbox" + i);
+      label.innerHTML = todoList.todos[i].todoText;
+      
+    //create a unqiue ID for each li element for css styling reasons
       var todosLi = document.createElement('li');
-      //create a unqiue ID for each li element for css styling reasons
       todosLi.setAttribute("id", "li"+i);
-      todosLi.textContent = todoList.todos[i].todoText;
+      //append both to UL element
+      todosLi.appendChild(todosLiCheckbox);
+      todosLi.appendChild(label);
       todosUl.appendChild(todosLi);
       todoLiCounter++;
     }
