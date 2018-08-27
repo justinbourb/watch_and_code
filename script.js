@@ -29,24 +29,6 @@ var todoList = {
     }
     views.displayTodos();
   },
-//displays Todos (to console)
-  displayTodos: function(){
-    if (this.todos.length===0){
-      //console.log('Your todo list is empty.')
-      document.getElementById("todoList").innerHTML = "<p>"+"Your todo list is empty."+"</p>";
-      return
-    }
-    for (var i=0; i<this.todos.length;i++){
-      if (this.todos[i].completed){
-        //console.log("(X)",this.todos[i].todoText);
-        document.getElementById("todoList").innerHTML = "<p>"+"(X) "+this.todos[i].todoText+"</p>";
-      }
-      else{
-      //console.log("( )",this.todos[i].todoText)
-        document.getElementById("todoList").innerHTML = "<p>"+"( ) "+this.todos[i].todoText+"</p>";
-      }
-    }
-  },
 //todo list
   todos:[],
 
@@ -77,11 +59,16 @@ var todoList = {
 
   },//toggles completed property of todo list item
   toggleCompleted: function(position){
-    if(this.todos[position]){
-    var todo= this.todos[position];
-    todo.completed = !todo.completed;
-    }
-    views.displayTodos();
+    //this function will set todoList.todos[i].compeleted based on the status of the todo list checkboxes
+    for(var i=0;i<todoList.todos.length;i++){
+      var isCheckboxChecked = document.getElementById("liCheckbox"+i).checked;
+      if (isCheckboxChecked){
+        todoList.todos[i].completed=true;
+      }
+      else{
+        todoList.todos[i].completed=false;
+      };
+    };
   }
 };
 
@@ -115,23 +102,12 @@ var handlers ={
   },
   toggleAll: function(){
     todoList.toggleAll();
-    for(var i=0;i<todoList.todos.length;i++){
-      document.getElementById("liCheckbox"+i).checked=todoList.todos[i].completed;
-    };
     changeBackgroundImage();
     changeBorderColor();
-  },toggleCheckboxCompleted:function(){
-    //this function will set todoList.todos[i].compeleted based on the status of the todo list checkboxes
-    for(var i=0;i<todoList.todos.length;i++){
-      var isCheckboxChecked = document.getElementById("liCheckbox"+i).checked;
-      if (isCheckboxChecked){
-        todoList.todos[i].completed=true;
-      }
-      else{
-        todoList.todos[i].completed=false;
-      };
-    };
-  
+  },toggleCompleted:function(){
+    todoList.toggleCompleted();
+    changeBackgroundImage();
+    changeBorderColor();
   }};
 
 
@@ -153,8 +129,8 @@ var views={
     
     
     // see https://stackoverflow.com/questions/40228152/css-js-checked-checkbox-should-line-out-an-li-element-in-a-to-do-list-applic?rq=1
-    //TODO: toggle completed yes/no in todoList.todos when check box is checked or unchecked
-    //TODO: remove toggle button, make toggle all button activate checkboxes
+    //done: toggle completed yes/no in todoList.todos when check box is checked or unchecked
+    //done: remove toggle button, make toggle all button activate checkboxes
     //TODO: make delete button only available when boxes are checked, if boxes checked >1 => delete button
     // will say delete multiple
     for (var i=0; i<todoList.todos.length; i++){
@@ -162,7 +138,7 @@ var views={
     var todosLiCheckbox = document.createElement("input"); 
       todosLiCheckbox.setAttribute("type", "checkbox");
       todosLiCheckbox.setAttribute("id", "liCheckbox"+i);
-      todosLiCheckbox.setAttribute("onclick","handlers.toggleCheckboxCompleted()");
+      todosLiCheckbox.setAttribute("onclick","handlers.toggleCompleted()");
     //create labels for checkboxes
     var label = document.createElement("label");
       label.setAttribute("for", "liCheckbox" + i);
