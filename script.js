@@ -122,6 +122,13 @@ var handlers ={
 var views={
 //display Todos by creating <li> items for each todo
   displayTodos: function(){
+    //not sure why this wasn't working without calling setTimeout??  But it works like this.
+    setTimeout(function(){
+      if (todoList.todos.length>0){
+        document.getElementById("toggleAllButton").style.visibility = "visible";
+        }else{
+          document.getElementById("toggleAllButton").style.visibility = "hidden";
+      }},0);
     var todoLiCounter = 0;
     var todosUl = document.querySelector('ul');
     //reset innerHTML to '' to prevent duplicate entries showing up
@@ -132,15 +139,13 @@ var views={
       todosLi.setAttribute("id", "li0");
       todosLi.textContent = "Your todo list is empty.";
       todosUl.appendChild(todosLi);
+      //make sure delete & toggleAll buttons are showing correctly each time DisplayTodos() is called
+      this.toggleDelete();
+      document.getElementById("toggleAllButton").style.visiblity = "hidden";
       return
     }
     
     
-    // see https://stackoverflow.com/questions/40228152/css-js-checked-checkbox-should-line-out-an-li-element-in-a-to-do-list-applic?rq=1
-    //done: toggle completed yes/no in todoList.todos when check box is checked or unchecked
-    //done: remove toggle button, make toggle all button activate checkboxes
-    //TODO: make delete button only available when boxes are checked, if boxes checked >1 => delete button
-    // will say delete multiple
     for (var i=0; i<todoList.todos.length; i++){
     //create checkboxes to go with Li elements with unique id
     var todosLiCheckbox = document.createElement("input"); 
@@ -162,8 +167,10 @@ var views={
       document.getElementById("liCheckbox"+i).checked=todoList.todos[i].completed;
       todoLiCounter++;
     }
-    //make sure delete button is showing correctly each time DisplayTodos() is called
+    //make sure delete and toggleAll buttons are showing correctly each time DisplayTodos() is called
+    
     this.toggleDelete();
+    
   },toggleDelete:function(){
     //this function will show the delete button if a "liCheckbox" is clicked
     var checkboxesClicked = 0;
