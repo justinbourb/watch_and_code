@@ -112,10 +112,6 @@ var handlers ={
       changeBackgroundImage();
       changeBorderColor();
     
-  },displayTodos: function(){
-    views.displayTodos();
-    changeBackgroundImage();
-    changeBorderColor();
   },
   toggleAll: function(){
     todoList.toggleAll();
@@ -124,13 +120,6 @@ var handlers ={
     };
     changeBackgroundImage();
     changeBorderColor();
-  },toggleCompleted:function(){
-      var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
-      todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
-      toggleCompletedPositionInput.value='';
-      changeBackgroundImage();
-      changeBorderColor();
-
   },toggleCheckboxCompleted:function(){
     //this function will set todoList.todos[i].compeleted based on the status of the todo list checkboxes
     for(var i=0;i<todoList.todos.length;i++){
