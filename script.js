@@ -24,9 +24,18 @@ var todoList = {
   },
 //deletes todo
   deleteTodo: function(position){
-    if(this.todos[position]){
-    this.todos.splice(position,1);
+    var itemsToSplice = [];
+    //first we find which items to remove(splice)
+    for (var i=0; i<this.todos.length; i++){
+     if (this.todos[i].completed===true){
+      itemsToSplice.push(this.todos[i].todoText);
+      }
     }
+    //next we splice the results of itemsToSplice;
+    for (var i=0; i<itemsToSplice.length; i++){
+      var indexToSplice = todoList.todos.findIndex(x => x.todoText===itemsToSplice[i]);
+      this.todos.splice(indexToSplice,1);
+    };
     views.displayTodos();
   },
 //todo list
@@ -93,9 +102,7 @@ var handlers ={
       changeBorderColor();
     
   },deleteTodo:function(){
-      var deleteTodoPositionInput = document.getElementById('deleteTodoPositionInput');
-      todoList.deleteTodo(deleteTodoPositionInput.valueAsNumber);
-      deleteTodoPositionInput.value='';
+      todoList.deleteTodo();
       changeBackgroundImage();
       changeBorderColor();
     
@@ -108,6 +115,7 @@ var handlers ={
     todoList.toggleCompleted();
     changeBackgroundImage();
     changeBorderColor();
+    views.toggleDelete();
   }};
 
 
@@ -154,7 +162,31 @@ var views={
       document.getElementById("liCheckbox"+i).checked=todoList.todos[i].completed;
       todoLiCounter++;
     }
-  },
+    //make sure delete button is showing correctly each time DisplayTodos() is called
+    this.toggleDelete();
+  },toggleDelete:function(){
+    //this function will show the delete button if a "liCheckbox" is clicked
+    var checkboxesClicked = 0;
+    for (var i=0; i<todoList.todos.length; i++){
+      if (document.getElementById('liCheckbox'+i).checked == true) {
+          checkboxesClicked++;
+      }};
+      // else {
+      //     document.getElementById("deleteButton").style.visibility = "hidden";
+      // };
+    if (checkboxesClicked>1){ 
+      document.getElementById("deleteButton").style.visibility = "visible";
+      document.getElementById("deleteButton").innerHTML="Delete Selected";
+    };
+    if (checkboxesClicked===1){ 
+      document.getElementById("deleteButton").style.visibility = "visible";
+      document.getElementById("deleteButton").innerHTML="Delete";
+    };
+    if (checkboxesClicked===0){
+     document.getElementById("deleteButton").style.visibility = "hidden" 
+    };
+  }
+  
   
   
 };
