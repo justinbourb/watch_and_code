@@ -16,7 +16,7 @@ button{
 .buttonGroup button:hover {
   background-color:white;
 }
-#deleteButton, #deleteTodoPositionInput{
+#deleteButton, #deleteTodoPositionInput, #toggleAllButton{
   visibility:hidden;
 }
 h1{

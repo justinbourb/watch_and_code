@@ -18,9 +18,7 @@
       <h2>Made with Glitch!</h2>
     </div>
 
-    <div class="buttonGroup">
-      <p><button onclick="handlers.toggleAll()">Toggle All</button></p>
-    </div>
+ 
 
     <div class="buttonGroup">
       <p><button id="addTodoButton" onclick="handlers.addTodo()">Add Todo</button>
@@ -37,8 +35,10 @@
     </div>
 
     <div class="buttonGroup">
-      <p><button onclick="handlers.deleteTodo()" id="deleteButton">Delete</button>
-        <input class ="numberInput" id="deleteTodoPositionInput" type="number" placeholder="#" min="0"></p>
+      <button id="toggleAllButton" onclick="handlers.toggleAll()">Toggle All</button>
+      <button onclick="handlers.deleteTodo()" id="deleteButton">Delete</button>
+        <input class ="numberInput" id="deleteTodoPositionInput" type="number" placeholder="#" min="0">
+      
     </div>
 
 
