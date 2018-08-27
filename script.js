@@ -1,6 +1,6 @@
 /* If you're feeling fancy you can add interactivity
     to your site with Javascript */
-//working through version 6
+//working through version 9?
 
 
 //todoList contains the logic and data of the todoList
@@ -86,17 +86,7 @@ var todoList = {
 };
 
 var handlers ={
-  displayTodos: function(){
-    views.displayTodos();
-    changeBackgroundImage();
-    changeBorderColor();
-  },
-  toggleAll: function(){
-    todoList.toggleAll();
-    changeBackgroundImage();
-    changeBorderColor();
-  },
-  addTodo: function(){
+    addTodo: function(){
     //note: index.html has javascript so this is called on click and enter keyup
     var addTodoTextInput = document.getElementById('addTodoTextInput');
     todoList.addTodo(addTodoTextInput.value);
@@ -122,6 +112,18 @@ var handlers ={
       changeBackgroundImage();
       changeBorderColor();
     
+  },displayTodos: function(){
+    views.displayTodos();
+    changeBackgroundImage();
+    changeBorderColor();
+  },
+  toggleAll: function(){
+    todoList.toggleAll();
+    for(var i=0;i<todoList.todos.length;i++){
+      document.getElementById("liCheckbox"+i).checked=todoList.todos[i].completed;
+    };
+    changeBackgroundImage();
+    changeBorderColor();
   },toggleCompleted:function(){
       var toggleCompletedPositionInput = document.getElementById('toggleCompletedPositionInput');
       todoList.toggleCompleted(toggleCompletedPositionInput.valueAsNumber);
@@ -129,6 +131,18 @@ var handlers ={
       changeBackgroundImage();
       changeBorderColor();
 
+  },toggleCheckboxCompleted:function(){
+    //this function will set todoList.todos[i].compeleted based on the status of the todo list checkboxes
+    for(var i=0;i<todoList.todos.length;i++){
+      var isCheckboxChecked = document.getElementById("liCheckbox"+i).checked;
+      if (isCheckboxChecked){
+        todoList.todos[i].completed=true;
+      }
+      else{
+        todoList.todos[i].completed=false;
+      };
+    };
+  
   }};
 
 
@@ -156,9 +170,10 @@ var views={
     // will say delete multiple
     for (var i=0; i<todoList.todos.length; i++){
     //create checkboxes to go with Li elements with unique id
-      var todosLiCheckbox = document.createElement("input"); 
+    var todosLiCheckbox = document.createElement("input"); 
       todosLiCheckbox.setAttribute("type", "checkbox");
       todosLiCheckbox.setAttribute("id", "liCheckbox"+i);
+      todosLiCheckbox.setAttribute("onclick","handlers.toggleCheckboxCompleted()");
     //create labels for checkboxes
     var label = document.createElement("label");
       label.setAttribute("for", "liCheckbox" + i);
@@ -171,6 +186,7 @@ var views={
       todosLi.appendChild(todosLiCheckbox);
       todosLi.appendChild(label);
       todosUl.appendChild(todosLi);
+      document.getElementById("liCheckbox"+i).checked=todoList.todos[i].completed;
       todoLiCounter++;
     }
   },
@@ -197,7 +213,8 @@ function changeBorderColor(){
   document.getElementById("todoList").style.borderColor=randomColor;
   document.getElementById("todoList").style.visibility="visible";
   var numberofLiElements = document.getElementById("todoList").getElementsByTagName("li").length;
-  for (var i = 0; i <=numberofLiElements; i++){
+  //also adds a random border color for each Li element
+  for (var i = 0; i <numberofLiElements; i++){
     randomColor = "#"+((1<<24)*Math.random()|0).toString(16);
     var uniqueId="li"+i;
     document.getElementById(uniqueId).style.borderColor=randomColor;
