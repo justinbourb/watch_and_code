@@ -1,6 +1,7 @@
 **TodoMVC jQuery**
+To view a live demo URL: https://bright-cardinal.glitch.me/#/all
 
-URL: https://hyperdev.com/#!/project/maze-stealer
+Original watch and code readme is below.
 
 This is the workspace for the watchandcode.com
 screencast series on the jQuery version of TodoMVC.
