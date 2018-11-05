@@ -1,6 +1,7 @@
 /*global jQuery, Handlebars, Router */
 //immediatley invoked function expression
-jQuery(function ($) {
+// jQuery(function ($) {
+
 	'use strict';
 
 	Handlebars.registerHelper('eq', function (a, b, options) {
@@ -46,46 +47,65 @@ jQuery(function ($) {
 	var App = {
 		init: function () {
 			this.todos = util.store('todos-jquery');
-			this.todoTemplate = Handlebars.compile($('#todo-template').html());
-			this.footerTemplate = Handlebars.compile($('#footer-template').html());
+			// this.todoTemplate = Handlebars.compile($('#todo-template').html());
+			// this.footerTemplate = Handlebars.compile($('#footer-template').html());
+      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
+			this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
 			this.bindEvents();
+      window.location.hash="/all";
       //upon calling init this.render should be called if todos has any todo items
       //from a previous session
-      if (this.todos.length>0){
+      if (this.todos.length){
         this.render();
       };
-      //replaced director.js functionality by:
-      //1. getting the filter value from window.location.hash inside the render function
-      //   so it is always updated each time render is called
-      //2. by initially setting the filter to /all with a document.ready call (at end of script)
-      //3. adding onClick="renderFooter()" for each link in the footer
-      //4. removed filter: this.filter from renderFooter() it is not need by this function
-      //5. add function to call render every time a link in footer is cliecked:
-      //window.onhashchange=function(){
-      //       App.render();
-      //       }
-      
-			// //new Router is a constructor using director.js
-      // previous implementation using director.js
-			// new Router({
-			// 	'/:filter': function (filter) {
-			// 		this.filter = window.location.hash.split('#')[1].split("/")[1];
-			// 		this.render();
-			// 	}.bind(this)
-			// }).init('/all');      
+    
 		},
 		bindEvents: function () {
       // this explanation
       //this.create.bind(this) ==> App.create.bind(this===App)
-			$('#new-todo').on('keyup', this.create.bind(this));
-			$('#toggle-all').on('change', this.toggleAll.bind(this));
-			$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
-			$('#todo-list')
-				.on('change', '.toggle', this.toggle.bind(this))
-				.on('dblclick', 'label', this.edit.bind(this))
-				.on('keyup', '.edit', this.editKeyup.bind(this))
-				.on('focusout', '.edit', this.update.bind(this))
-				.on('click', '.destroy', this.destroy.bind(this));
+			//$('#new-todo').on('keyup', this.create.bind(this));
+      //$('#toggle-all').on('change', this.toggleAll.bind(this));
+			//$('#footer').on('click', '#clear-completed', this.destroyCompleted.bind(this));
+			// $('#todo-list')
+			// 	.on('change', '.toggle', this.toggle.bind(this))
+				//.on('dblclick', 'label', this.edit.bind(this))
+				//.on('keyup', '.edit', this.editKeyup.bind(this));
+				//.on('focusout', '.edit', this.update.bind(this));
+				//.on('click', '.destroy', this.destroy.bind(this));
+      document.getElementById('new-todo').addEventListener('keyup', this.create.bind(this));
+      document.getElementById('toggle-all').addEventListener('change', this.toggleAll.bind(this));
+      /**below is an example of event delegation.  Since clear-completed does not always exist
+      *we attach the event listener to the body of the html and check if
+      *event.target.id === clear-completed
+      **/
+      document.querySelector('body').addEventListener('click', function(event) {
+        if (event.target.id === 'clear-completed') {
+          App.destroyCompleted();
+        };
+        if (event.target.className === 'destroy'){
+          App.destroy(event);
+        };
+      });
+      document.querySelector('body').addEventListener('focusout', function(event) {
+        if (event.target.className === 'edit'){
+          App.update(event);
+        };
+      });
+      document.querySelector('body').addEventListener('keyup', function(event) {
+        if (event.target.className === 'edit'){
+          App.editKeyup(event);
+        };
+      });
+      document.querySelector('body').addEventListener('dblclick', function(event) {
+        if (event.target.nodeName === 'label'){
+          App.edit(event);
+        };
+      });
+      document.querySelector('body').addEventListener('change', function(event) {
+        if (event.target.className === 'toggle'){
+          App.update(event);
+        };
+      });
 		},
 		render: function () {
       //determine which "route" or "page" we are on
@@ -94,15 +114,30 @@ jQuery(function ($) {
       //var todos will determine what is displayed on screen for our filter.
 			var todos = this.getFilteredTodos();
       //todo-list innerHTHML gets filled up with handlebar template and todos variable data
-			$('#todo-list').html(this.todoTemplate(todos));
-			$('#main').toggle(todos.length > 0);
-			$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
+			//$('#todo-list').html(this.todoTemplate(todos));
+      document.getElementById('todo-list').innerHTML = this.todoTemplate(todos);
+			// $('#main').toggle(todos.length > 0);
+      if (todos.length > 0){
+        document.getElementById('main').style.display = "block";
+      }else{
+       document.getElementById('main').style.display = "none"; 
+      };
+      
+      /**Jquery logic breakdown:
+      *$('#toggle-all') === document.getElementById('toggle-all')
+      *.prop('checked' === name of the property to set
+      *this.getActiveTodos().length === 0); === a boolean true/false check which updates the state
+      *of the toggle all property.  Which works both when toggle all button is clicked
+      *and when the user clicks the individual checkboxes
+      **/
+			//$('#toggle-all').prop('checked', this.getActiveTodos().length === 0);
+      
+      document.getElementById('toggle-all').checked = (this.getActiveTodos().length === 0);
       //render correct footer based on filter
 			this.renderFooter();
       //focus pointer to new todo element
-			$('#new-todo').focus();
-      //store todos to local storage
-			util.store('todos-jquery', this.todos);
+			//$('#new-todo').focus();
+      document.getElementById('new-todo').focus();
 		},
 		renderFooter: function () {
 			var todoCount = this.todos.length;
@@ -112,26 +147,35 @@ jQuery(function ($) {
 				activeTodoCount: activeTodoCount,
 				activeTodoWord: util.pluralize(activeTodoCount, 'item'),
 				completedTodos: todoCount - activeTodoCount,
-        //filter is not needed here, was:
-        //filter: this.filter
-        //=> no functionality change when commented out
 			});
 
       //$('#footer')===getElementById("footer")
       //.toggle(todoCount>0) ==> (todoCount>0) returns true or false depending on the length of the todo list
       //.toggle(display) is jquery boolean logic used to display an element or not
       //.html(template) calls the handlebars template
-			$('#footer').toggle(todoCount > 0).html(template);
+			//$('#footer').toggle(todoCount > 0).html(template);
+      
+      if (todoCount > 0){
+        document.getElementById('footer').innerHTML=template;
+        document.getElementById('footer').style.display = "block";
+      }else{
+       document.getElementById('footer').style.display = "none"; 
+      };
       
 			
 		},
+    storeTodos: function(){
+      util.store('todos-jquery', this.todos);
+    },
 		toggleAll: function (e) {
-			var isChecked = $(e.target).prop('checked');
+			// var isChecked = $(e.target).prop('checked');
+      var isChecked = e.target.checked;
+
 
 			this.todos.forEach(function (todo) {
 				todo.completed = isChecked;
 			});
-
+      this.storeTodos();
 			this.render();
 		},
 		getActiveTodos: function () {
@@ -160,12 +204,20 @@ jQuery(function ($) {
 		destroyCompleted: function () {
 			this.todos = this.getActiveTodos();
 			this.filter = 'all';
+      this.storeTodos();
 			this.render();
 		},
 		// accepts an element from inside the `.item` div and
 		// returns the corresponding index in the `todos` array
 		indexFromEl: function (el) {
-			var id = $(el).closest('li').data('id');
+      /**notes for input.toggle button
+      *when clicking input toggle, el = input.toggle in jquery
+      *this equates to dom element <input>, class = "toggle" 
+      *closest li is a parent of toggle element, find this li's data-id
+
+      */
+			//var id = $(el).closest('li').data('id');
+      var id = el.closest('li').getAttribute('data-id');
 			var todos = this.todos;
 			var i = todos.length;
 
@@ -177,8 +229,10 @@ jQuery(function ($) {
 		},
     //create a todo
 		create: function (e) {
-			var $input = $(e.target);
-			var val = $input.val().trim();
+			//var $input = $(e.target);
+      var input = document.getElementById('new-todo');
+			//var val = $input.val().trim();
+      var val = input.value.trim();
 
 			if (e.which !== ENTER_KEY || !val) {
 				return;
@@ -190,53 +244,83 @@ jQuery(function ($) {
 				completed: false
 			});
 
-			$input.val('');
-
+			//$input.val('');
+      input.value = '';
+      this.storeTodos();
 			this.render();
 		},
     //toggle todo items
 		toggle: function (e) {
 			var i = this.indexFromEl(e.target);
 			this.todos[i].completed = !this.todos[i].completed;
+      this.storeTodos();
 			this.render();
 		},
     //allows editing of todo item
 		edit: function (e) {
-			var $input = $(e.target).closest('li').addClass('editing').find('.edit');
-			$input.val($input.val()).focus();
+			//var $input = $(e.target).closest('li').addClass('editing').find('.edit');
+      /**finds the element clicked (e.target) and finds the closest Li element and adds a class of editing to this li
+      * there is an editing css rule which sets the li to invisible
+      * which allows access to the underlying input field (class of edit)
+      **/
+      var input = e.target.closest('li').classList.add('editing');
+      //focus on editing text area
+      //$input.val($input.val()).focus();
+			e.target.closest('li').querySelector('.edit').focus();
+      
 		},
-    //check if enter or esc is pressed while editing
-    //if enter store data, if esc no change
+    /**Jquery version:
+    *check if enter or esc is pressed while editing
+    *if enter then store data
+    *if esc then set e.target to ('abort', true)
+    *this is then handled by the update function which will not update the field
+    **/
+    
+    /**javascript version:
+    *check if enter or esc is pressed while editing
+    *if enter then store data
+    *if esc then set e.target.dataset.abort to 'abort'
+    *this is then handled by the update function which will not update the field
+    **/
+    
 		editKeyup: function (e) {
 			if (e.which === ENTER_KEY) {
 				e.target.blur();
 			}
 
 			if (e.which === ESCAPE_KEY) {
-				$(e.target).data('abort', true).blur();
+				//$(e.target).data('abort', true).blur();
+        e.target.dataset.abort = 'abort';
+        e.target.blur();
 			}
 		},
     //this function edits content of todo item
 		update: function (e) {
 			var el = e.target;
-			var $el = $(el);
-			var val = $el.val().trim();
+			// var $el = $(el);
+			// var val = $el.val().trim();
+      var val = el.value.trim();
 
 			if (!val) {
 				this.destroy(e);
 				return;
 			}
 
-			if ($el.data('abort')) {
+			/*if ($el.data('abort')) {
 				$el.data('abort', false);
+        */
+      //If el.dataset.abort === 'abort' then switch to proceed and do not store the data.
+      if (el.dataset.abort === 'abort'){
+        el.dataset.abort = 'proceed';
 			} else {
 				this.todos[this.indexFromEl(el)].title = val;
 			}
-
+      this.storeTodos();
 			this.render();
 		},
 		destroy: function (e) {
 			this.todos.splice(this.indexFromEl(e.target), 1);
+      this.storeTodos();
 			this.render();
 		}
 	};
@@ -245,6 +329,6 @@ jQuery(function ($) {
   window.onhashchange=function(){
     App.render();
     }
-});
+//});
 //set default window hash to all
-$( document ).ready(window.location.hash = "/all");
+//$( document ).ready(window.location.hash = "/all");
