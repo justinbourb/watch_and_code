@@ -4,6 +4,12 @@
 
 	'use strict';
 
+	Handleba/*global jQuery, Handlebars, Router */
+//immediatley invoked function expression
+// jQuery(function ($) {
+
+	'use strict';
+
 	Handlebars.registerHelper('eq', function (a, b, options) {
 		return a === b ? options.fn(this) : options.inverse(this);
 	});
@@ -45,21 +51,6 @@
 	};
 
 	var App = {
-		init: function () {
-			this.todos = util.store('todos-jquery');
-			// this.todoTemplate = Handlebars.compile($('#todo-template').html());
-			// this.footerTemplate = Handlebars.compile($('#footer-template').html());
-      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
-			this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
-			this.bindEvents();
-      window.location.hash="/all";
-      //upon calling init this.render should be called if todos has any todo items
-      //from a previous session
-      if (this.todos.length){
-        this.render();
-      };
-    
-		},
 		bindEvents: function () {
       // this explanation
       //this.create.bind(this) ==> App.create.bind(this===App)
@@ -97,17 +88,147 @@
         };
       });
       document.querySelector('body').addEventListener('dblclick', function(event) {
-        if (event.target.nodeName === 'label'){
+        if (event.target.nodeName === 'LABEL'){
           App.edit(event);
         };
       });
       document.querySelector('body').addEventListener('change', function(event) {
         if (event.target.className === 'toggle'){
-          App.update(event);
+          App.toggle(event);
         };
       });
 		},
-		render: function () {
+    //create a todo
+		create: function (e) {
+			//var $input = $(e.target);
+      var input = document.getElementById('new-todo');
+			//var val = $input.val().trim();
+      var val = input.value.trim();
+
+			if (e.which !== ENTER_KEY || !val) {
+				return;
+			}
+
+			this.todos.push({
+				id: util.uuid(),
+				title: val,
+				completed: false
+			});
+
+			//$input.val('');
+      input.value = '';
+      this.storeTodos();
+			this.render();
+		},
+		destroy: function (e) {
+			this.todos.splice(this.indexFromEl(e.target), 1);
+      this.storeTodos();
+			this.render();
+		},
+    //deletes a todo
+		destroyCompleted: function () {
+			this.todos = this.getActiveTodos();
+			this.filter = 'all';
+      this.storeTodos();
+			this.render();
+		},
+    //allows editing of todo item
+		edit: function (e) {
+			//var $input = $(e.target).closest('li').addClass('editing').find('.edit');
+      /**finds the element clicked (e.target) and finds the closest Li element and adds a class of editing to this li
+      * there is an editing css rule which sets the li to invisible
+      * which allows access to the underlying input field (class of edit)
+      **/
+      var input = e.target.closest('li').classList.add('editing');
+      //focus on editing text area
+      //$input.val($input.val()).focus();
+			e.target.closest('li').querySelector('.edit').focus();
+      
+		},
+    /**Jquery version:
+    *check if enter or esc is pressed while editing
+    *if enter then store data
+    *if esc then set e.target to ('abort', true)
+    *this is then handled by the update function which will not update the field
+    **/
+    
+    /**javascript version:
+    *check if enter or esc is pressed while editing
+    *if enter then store data
+    *if esc then set e.target.dataset.abort to 'abort'
+    *this is then handled by the update function which will not update the field
+    **/
+    
+		editKeyup: function (e) {
+			if (e.which === ENTER_KEY) {
+				e.target.blur();
+			}
+
+			if (e.which === ESCAPE_KEY) {
+				//$(e.target).data('abort', true).blur();
+        e.target.dataset.abort = 'abort';
+        e.target.blur();
+			}
+		},
+    getActiveTodos: function () {
+			return this.todos.filter(function (todo) {
+				return !todo.completed;
+			});
+		},
+		getCompletedTodos: function () {
+			return this.todos.filter(function (todo) {
+				return todo.completed;
+			});
+		},
+    //shows active, completed or all todos
+		getFilteredTodos: function () {
+			if (this.filter === 'active') {
+				return this.getActiveTodos();
+			}
+
+			if (this.filter === 'completed') {
+				return this.getCompletedTodos();
+			}
+
+			return this.todos;
+		},
+	
+    	// accepts an element from inside the `.item` div and
+		// returns the corresponding index in the `todos` array
+		indexFromEl: function (el) {
+      /**notes for input.toggle button
+      *when clicking input toggle, el = input.toggle in jquery
+      *this equates to dom element <input>, class = "toggle" 
+      *closest li is a parent of toggle element, find this li's data-id
+
+      */
+			//var id = $(el).closest('li').data('id');
+      var id = el.closest('li').getAttribute('data-id');
+			var todos = this.todos;
+			var i = todos.length;
+
+			while (i--) {
+				if (todos[i].id === id) {
+					return i;
+				}
+			}
+		},
+    init: function () {
+			this.todos = util.store('todos-jquery');
+			// this.todoTemplate = Handlebars.compile($('#todo-template').html());
+			// this.footerTemplate = Handlebars.compile($('#footer-template').html());
+      this.todoTemplate = Handlebars.compile(document.getElementById('todo-template').innerHTML);
+			this.footerTemplate = Handlebars.compile(document.getElementById('footer-template').innerHTML);
+			this.bindEvents();
+      window.location.hash="/all";
+      //upon calling init this.render should be called if todos has any todo items
+      //from a previous session
+      if (this.todos.length){
+        this.render();
+      };
+    
+		},
+    render: function () {
       //determine which "route" or "page" we are on
       //this value determined by renderFooter() links or manually input into url
       this.filter=window.location.hash.split('#')[1].split("/")[1];
@@ -167,6 +288,13 @@
     storeTodos: function(){
       util.store('todos-jquery', this.todos);
     },
+      //toggle todo items
+		toggle: function (e) {
+			var i = this.indexFromEl(e.target);
+			this.todos[i].completed = !this.todos[i].completed;
+      this.storeTodos();
+			this.render();
+		},
 		toggleAll: function (e) {
 			// var isChecked = $(e.target).prop('checked');
       var isChecked = e.target.checked;
@@ -178,122 +306,7 @@
       this.storeTodos();
 			this.render();
 		},
-		getActiveTodos: function () {
-			return this.todos.filter(function (todo) {
-				return !todo.completed;
-			});
-		},
-		getCompletedTodos: function () {
-			return this.todos.filter(function (todo) {
-				return todo.completed;
-			});
-		},
-    //shows active, completed or all todos
-		getFilteredTodos: function () {
-			if (this.filter === 'active') {
-				return this.getActiveTodos();
-			}
-
-			if (this.filter === 'completed') {
-				return this.getCompletedTodos();
-			}
-
-			return this.todos;
-		},
-    //deletes a todo
-		destroyCompleted: function () {
-			this.todos = this.getActiveTodos();
-			this.filter = 'all';
-      this.storeTodos();
-			this.render();
-		},
-		// accepts an element from inside the `.item` div and
-		// returns the corresponding index in the `todos` array
-		indexFromEl: function (el) {
-      /**notes for input.toggle button
-      *when clicking input toggle, el = input.toggle in jquery
-      *this equates to dom element <input>, class = "toggle" 
-      *closest li is a parent of toggle element, find this li's data-id
-
-      */
-			//var id = $(el).closest('li').data('id');
-      var id = el.closest('li').getAttribute('data-id');
-			var todos = this.todos;
-			var i = todos.length;
-
-			while (i--) {
-				if (todos[i].id === id) {
-					return i;
-				}
-			}
-		},
-    //create a todo
-		create: function (e) {
-			//var $input = $(e.target);
-      var input = document.getElementById('new-todo');
-			//var val = $input.val().trim();
-      var val = input.value.trim();
-
-			if (e.which !== ENTER_KEY || !val) {
-				return;
-			}
-
-			this.todos.push({
-				id: util.uuid(),
-				title: val,
-				completed: false
-			});
-
-			//$input.val('');
-      input.value = '';
-      this.storeTodos();
-			this.render();
-		},
-    //toggle todo items
-		toggle: function (e) {
-			var i = this.indexFromEl(e.target);
-			this.todos[i].completed = !this.todos[i].completed;
-      this.storeTodos();
-			this.render();
-		},
-    //allows editing of todo item
-		edit: function (e) {
-			//var $input = $(e.target).closest('li').addClass('editing').find('.edit');
-      /**finds the element clicked (e.target) and finds the closest Li element and adds a class of editing to this li
-      * there is an editing css rule which sets the li to invisible
-      * which allows access to the underlying input field (class of edit)
-      **/
-      var input = e.target.closest('li').classList.add('editing');
-      //focus on editing text area
-      //$input.val($input.val()).focus();
-			e.target.closest('li').querySelector('.edit').focus();
-      
-		},
-    /**Jquery version:
-    *check if enter or esc is pressed while editing
-    *if enter then store data
-    *if esc then set e.target to ('abort', true)
-    *this is then handled by the update function which will not update the field
-    **/
     
-    /**javascript version:
-    *check if enter or esc is pressed while editing
-    *if enter then store data
-    *if esc then set e.target.dataset.abort to 'abort'
-    *this is then handled by the update function which will not update the field
-    **/
-    
-		editKeyup: function (e) {
-			if (e.which === ENTER_KEY) {
-				e.target.blur();
-			}
-
-			if (e.which === ESCAPE_KEY) {
-				//$(e.target).data('abort', true).blur();
-        e.target.dataset.abort = 'abort';
-        e.target.blur();
-			}
-		},
     //this function edits content of todo item
 		update: function (e) {
 			var el = e.target;
@@ -317,11 +330,6 @@
 			}
       this.storeTodos();
 			this.render();
-		},
-		destroy: function (e) {
-			this.todos.splice(this.indexFromEl(e.target), 1);
-      this.storeTodos();
-			this.render();
 		}
 	};
 
@@ -332,3 +340,4 @@
 //});
 //set default window hash to all
 //$( document ).ready(window.location.hash = "/all");
+
