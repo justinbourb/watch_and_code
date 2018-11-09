@@ -1,0 +1,48 @@
+<html>
+  
+
+<head>
+
+  <script src="/script.js"></script>  
+  <script src="/jstinytest_dom_edition.js"></script>
+    
+</head>
+  </html>
+<script>
+  
+tests({
+
+  'accepts an empty array for dependencies':function(){
+    lS('name', [], function() {
+          return 'Gordon';
+        });
+    eq('Gordon', lS('name'));
+  },
+  'accepts no dependencies provided':function(){
+    lS('no_dependency', function() {
+          return 'Gordon';
+        })
+    eq('Gordon', lS('no_dependency'));
+    
+  },
+  'accepts an array of dependencies regardless of length':function(){
+   lS('company', [], function() {
+      return 'Watch and Code';
+    });
+
+    lS('workBlurb', ['name', 'company'], function(name, company) {
+      return name + ' works at ' + company;
+    }); 
+    eq('Gordon works at Watch and Code', lS('workBlurb'));
+  },
+  'accepts dependency provided as a string':function(){
+   lS('test', 'name', function(name){
+      return 'test ' + name;
+    });
+    eq('test Gordon', lS('test'));
+  },
+  'provides an error message when not called correctly':function(){
+    eq("Improper format.  Correct format lS('name'[,dependency], function);", lS('test', 'name'));
+  }
+});
+</script>
