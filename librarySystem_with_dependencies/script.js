@@ -1,89 +1,92 @@
-//example requirement:
-// librarySystem('name', [], function() {
-//   return 'Gordon';
-// });
-
-// librarySystem('company', [], function() {
-//   return 'Watch and Code';
-// });
-
-// librarySystem('workBlurb', ['name', 'company'], function(name, company) {
-//   return name + ' works at ' + company;
-// });
-
-// librarySystem('workBlurb'); // 'Gordon works at Watch and Code'
-
-
-
-//Current thinking
-//function results being stored in store[name]=callback();
-//I want to store the function instead.... then I can later call it with dependencies
-// replace dependency name with store[dependency1], store[dependency2], etc
-
 (function () {
   
   var store = {};
   //lS is short for librarySystem
   function lS(name, dependency, callback){
+    //creating a library 
    if (arguments.length > 1){
-    //creating a library       
-       //Case 1: dependency is given as an object
+      //Case 1: dependency is given as an object
       if (typeof(dependency) === "object" && typeof(callback) === "function"){
-        let updated = [];
-        dependency.forEach(function(element){
-        updated.push(store[element]);
-        });
-        store[name] = callback.apply(this, updated);
+        //case 1: dependency is provided
+        if (dependency.length > 0){
+        store[name] = {name: name, dependency: dependency, callback: callback, 
+                       callback_results: undefined}
         return
+        //case 2: lS is called with an empty array or string for dependency
+        }else{
+        store[name] = {name: name, dependency: dependency, callback: callback, 
+                       callback_results: callback()}
+        return
+        }
+          
       }
-       //Case 2: dependency is given as a string and callback function is provided
+      //Case 2: dependency is given as an string
       if (typeof(dependency) === "string" && typeof(callback) === "function"){
-        store[name] = callback(store[dependency]);
+        //case 1: dependency is provided
+        if (dependency.length > 0){
+        store[name] = {name: name, dependency: dependency.split(), callback: callback, 
+                       callback_results: undefined}
         return
-      } 
+        //case 2: lS is called with an empty array or string for dependency
+        }else{
+        store[name] = {name: name, dependency: dependency, callback: callback, 
+                       callback_results: callback()}
+        return
+        }
+          
+      }
        //Case 3: dependency is not provided, therefore the dependency variable is the function
        if (typeof(dependency) === "function" && callback === undefined){
-         store[name] = dependency();
+         store[name] = {name: name, dependency: undefined, callback: dependency, 
+                       callback_results: dependency()}
          return
        }else{
-         return "Improper format.  Correct format lS('name'[,dependency], function);"
+         return `Error: Improper format used.  
+        To store: lS('name'[,dependency], function);
+        To call : lS('name');`
+              
        }
    }else{
-     //The Object.keys() method returns an array of a given object's own property names, in the same order as we get with a normal loop.
-     var keys = Object.keys(store);
-     //The indexOf() method returns the first index at which a given element can be found in the array, or -1 if it is not present.
-     var index = keys.indexOf(name);
-     let  first = store[name];
-     let second = store[dependency];
-     return store[name]
+     //return a library
+     //check if the callback function was run / stored
+     if (store[name].callback_results !== undefined){
+       return store[name].callback_results
+     }else{
+      var dependenciesNotLoaded = [];
+       
+      function checkDependency(array){
+        array.forEach(function(element){
+          if(!store[element]){
+            dependenciesNotLoaded.push(element);
+              }
+          try{
+              if(store[element].dependency.length > 0){
+                  return checkDependency(store[element].dependency)
+              }
+              }catch{}
+          });
+
+      }
+      checkDependency(store[name].dependency);
+      //case 1: there are dependencies which haven't been loaded, notify the user
+      if (dependenciesNotLoaded.length > 0){
+       return "Dependencies not loaded: " + dependenciesNotLoaded.toString().replace(',', ', ') 
+      //case 2: all dependencies are loaded
+      }else{
+        //prepare dependency array for apply.() usage
+        let updated = [];
+        store[name].dependency.forEach(function(element){
+        updated.push(store[element].callback_results);
+        });
+        //store callback results
+        store[name].callback_results = store[name].callback.apply(null, updated);
+        return store[name].callback_results
+      }
+       
+       
+     }
    }
   }
   
   window.lS = lS;
 })();
-
-
-
-/**
-*Purpose:
-*1) pre-fill database (aka store variable in above IIFE) with information
-*Improvements:
-*1) use local storage istead, though it's not relevant to this challenge
-*2) use a real database, though it's not relevant to this challenge
-**/
-
-// lS('name', [], function() {
-//   return 'Gordon';
-// });
-
-// lS('company', [], function() {
-//   return 'Watch and Code';
-// });
-
-// lS('workBlurb', ['name', 'company'], function(name, company) {
-//   return name + ' works at ' + company;
-// });
-
-// lS('test', 'name', function(name){
-//   return 'test ' + name;
-// });
