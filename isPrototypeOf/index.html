@@ -1,0 +1,50 @@
+<html>
+  
+
+<head>
+
+  <script src="/script.js"></script>  
+  <script src="/jstinytest_dom_edition.js"></script>
+    
+</head>
+  </html>
+<script>
+  
+tests({
+  
+  'It should return true when .isPrototypeOf returns true':function(){
+    
+  canine = {
+    bark: function() {
+    console.log('bark');
+    }
+  };
+
+  dog = Object.create(canine);
+    dog.fetch = function() {
+    console.log('fetch');
+  };
+
+  myDog = Object.create(dog);
+  randomDog = Object.create(dog);
+  empty = Object.create(null);
+    
+    eq(dog.isPrototypeOf(myDog), isPrototypeOf(dog, myDog));
+  },
+  'It should work with Object.prototype.isPrototypeOf':function(){
+    eq(Object.prototype.isPrototypeOf(myDog), isPrototypeOf(Object.prototype, myDog));
+  },
+  'It should work with any number of prototype links':function(){
+    eq(canine.isPrototypeOf(myDog), isPrototypeOf(canine, myDog));
+  },
+  'It should return false when .isPrototypeOf returns false':function(){
+   eq(dog.isPrototypeOf(empty), isPrototypeOf(dog, empty));
+  },
+  'It should return false when both arguements are made from the same prototype':function(){
+   eq(randomDog.isPrototypeOf(myDog), isPrototypeOf(randomDog, myDog));
+  }
+});
+</script>
+
+
+
