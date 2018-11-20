@@ -1,8 +1,7 @@
-/**
-   * Purpose of toFixed():
+ /**
+   * Purpose of isPrototypeOf:
    * 1) set number of decimal places and rounding for floating point numbers 
    * 2) duplicate accounting.js accounting.toFixed() using string manipulation instead integers
-   * 3) it replicates accounting.js accounting.formatNumber()
    * 
    * Signature:
    * function toFixed(value, precision)
@@ -20,11 +19,9 @@
    **/
 
 function toFixed(value,precision){
-  //accounting.formatNumber replica
-  let formattedNumber = value.toString().replace(/[^0-9\.]+/g, '')
   //variable definitions
-	let wholeNumber = formattedNumber.toString().trim().split('.')[0];
-	let decimals = formattedNumber.toString().trim().split('.')[1];
+	let wholeNumber = value.toString().trim().split('.')[0];
+	let decimals = value.toString().trim().split('.')[1];
   let decimalPlaces = 0;
   let returnValue = "";
   function stringToRound(stringToRound, posistionToRound){
@@ -79,11 +76,16 @@ function toFixed(value,precision){
     //Case 2a: no rounding needed, just return whole number
     if (decimals[0] === undefined || decimals[0] === "" || parseInt(decimals[0]) < 5){
       returnValue = wholeNumber;
+      //catch returnValue of "-0" and return "0" instead
+      if (returnValue.length === 2 && returnValue[0] === "-" && returnValue[1] === "0"){
+       returnValue = "0" 
+      }
       return returnValue
     //Case 2b: rounding is required
     }else{
       wholeNumber = stringToRound(wholeNumber, wholeNumber.length);
       returnValue = wholeNumber;
+      
       return returnValue
     }
   }
