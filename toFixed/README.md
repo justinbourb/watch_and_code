@@ -1,4 +1,4 @@
-This is my solution for watch and code beast challenge 6.
+This is my solution for watch and code beast challenge 6.  Testing is done with https://github.com/justinbourb/jstinytest_dom_edition
 
 /**
    * Purpose of toFixed():
