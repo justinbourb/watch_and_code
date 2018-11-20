@@ -1,5 +1,5 @@
 /**
-   * Purpose of isPrototypeOf:
+   * Purpose of toFixed():
    * 1) set number of decimal places and rounding for floating point numbers 
    * 2) duplicate accounting.js accounting.toFixed() using string manipulation instead integers
    * 3) it replicates accounting.js accounting.formatNumber()
