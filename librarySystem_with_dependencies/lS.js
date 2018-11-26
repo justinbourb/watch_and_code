@@ -36,6 +36,21 @@
 (function () {
   
   let store = {};
+  let dependenciesNotLoaded = [];
+  let updated = [];     
+  function checkDependency(array) {
+    array.forEach(function(element) {
+      if (!store[element]) {
+        dependenciesNotLoaded.push(element);
+      }
+      try {
+          if(store[element].dependency.length > 0){
+              return checkDependency(store[element].dependency)
+          }
+          } catch {}
+      });
+
+  }
   //lS is short for librarySystem
   function lS(name, dependency, callback) {
     //creating a library 
@@ -87,21 +102,6 @@
      if (store[name].callback_results !== undefined) {
        return store[name].callback_results
      } else {
-      let dependenciesNotLoaded = [];
-       
-      function checkDependency(array) {
-        array.forEach(function(element) {
-          if (!store[element]) {
-            dependenciesNotLoaded.push(element);
-          }
-          try {
-              if(store[element].dependency.length > 0){
-                  return checkDependency(store[element].dependency)
-              }
-              } catch {}
-          });
-
-      }
       checkDependency(store[name].dependency);
       //case 1: there are dependencies which haven't been loaded, notify the user
       if (dependenciesNotLoaded.length > 0){
@@ -109,7 +109,6 @@
       //case 2: all dependencies are loaded
       } else {
         //prepare dependency array for apply.() usage
-        let updated = [];
         store[name].dependency.forEach(function(element) {
           updated.push(store[element].callback_results);
         });
