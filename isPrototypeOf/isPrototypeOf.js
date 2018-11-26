@@ -12,12 +12,12 @@
    * Return: true if proto is the prototype of obj or false if not
    * 
    * Example: 
-	 *	let canine = {
+   *	let canine = {
    * 		bark: function() {
    * 			console.log('bark');
    *		}
-	 *	};
-	 *
+   *	};
+   *
 	 * let dog = Object.create(canine);
 	 * canine.isPrototypeOf(dog);  // native function returns true
 	 * isPrototypeOf(canine, dog); // isPrototypeof() function does the same
@@ -53,6 +53,6 @@ function isPrototypeOf(proto, obj) {
         }
     //if something returns an error, it's not a prototype
   } catch {
-		return new TypeError('Cannot read property isPropertyOf of null or undefined');
+    return new TypeError('Cannot read property isPropertyOf of null or undefined');
     }
 }
