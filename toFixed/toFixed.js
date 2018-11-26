@@ -24,16 +24,18 @@ function toFixed(value,precision) {
 	let decimals = value.toString().trim().split('.')[1];
   let decimalPlaces = 0;
   let returnValue = "";
+	let outputString;
+	
   function stringToRound(stringToRound, posistionToRound) {
     /*create a new string, outputString, by rounding up the last digit of stringToRound
     *using string manipulation via slice and parseInt for adding
     */
     if (stringToRound[posistionToRound-1] === "9") {
-      let outputString = (parseInt(stringToRound.slice(posistionToRound-2,posistionToRound-1))+1).toString();
+      outputString = (parseInt(stringToRound.slice(posistionToRound-2,posistionToRound-1))+1).toString();
       outputString = addTrailingZeros(outputString, precision-1);
       return outputString
     } else {
-      let outputString = stringToRound.slice(0, posistionToRound-1) + (parseInt(stringToRound.slice(posistionToRound-1,posistionToRound))+1).toString();
+      outputString = stringToRound.slice(0, posistionToRound-1) + (parseInt(stringToRound.slice(posistionToRound-1,posistionToRound))+1).toString();
       return outputString
     }
   }
