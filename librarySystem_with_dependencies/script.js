@@ -29,7 +29,7 @@
    * librarySystem('app'); // 'app with loaded dependency'
    *
    * Errors: 
-   * Returns an error message when called incorrectly.
+   * Returns an error message when called incorrectly or dependecies are not loaded yet.
    **/
 
 
