@@ -7,21 +7,22 @@
    *
    * Parameters:
    * proto = The suspected prototype of obj
-	 * obj = the obj we want to detect it's prototype
+   * obj = the obj we want to detect it's prototype
    * 
    * Return: true if proto is the prototype of obj or false if not
    * 
    * Example: 
-   *	let canine = {
-   * 		bark: function() {
-   * 			console.log('bark');
-   *		}
-   *	};
+   * let canine = {
+   * 	bark: function() {
+   *      console.log('bark');
+   *	}
+   * };
    *
-	 * let dog = Object.create(canine);
-	 * canine.isPrototypeOf(dog);  // native function returns true
-	 * isPrototypeOf(canine, dog); // isPrototypeof() function does the same
-	 *
+   * let dog = Object.create(canine);
+   *
+   * canine.isPrototypeOf(dog);  // native function returns true
+   * isPrototypeOf(canine, dog); // isPrototypeof() function does the same
+   *
    * Errors: 
    * A TypeError is thrown if prototypeObj is undefined or null.
    **/
