@@ -7,8 +7,7 @@
 <script>
   
 tests({
-
-  'accepts an empty array for dependencies':function(){
+  'accepts an empty array for dependencies':function() {
     lS('name', [], function() {
           return 'Gordon';
         });
@@ -21,8 +20,8 @@ tests({
     eq('Gordon', lS('no_dependency'));
     
   },
-  'accepts an array of dependencies regardless of length':function(){
-   lS('company', [], function() {
+  'accepts an array of dependencies regardless of length':function() {
+    lS('company', [], function() {
       return 'Watch and Code';
     });
 
@@ -31,13 +30,13 @@ tests({
     }); 
     eq('Gordon works at Watch and Code', lS('workBlurb'));
   },
-  'accepts dependency provided as a string':function(){
-   lS('test', 'name', function(name){
+  'accepts dependency provided as a string':function() {
+    lS('test', 'name', function(name) {
       return 'test ' + name;
     });
     eq('test Gordon', lS('test'));
   },
-  'provides an error message when not called correctly':function(){
+  'provides an error message when not called correctly':function() {
     eq("Improper format.  Correct format lS('name'[,dependency], function);", lS('test', 'name'));
   }
 });
