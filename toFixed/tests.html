@@ -1,65 +1,60 @@
 <html>
-  
-
-<head>
-
-  <script src="/toFixed.js"></script>
-  <script src="/jstinytest_dom_edition.js"></script>
-  
-    
-</head>
-  </html>
+  <head>
+    <script src="/toFixed.js"></script>
+    <script src="/jstinytest_dom_edition.js"></script>  
+  </head>
+</html>
 <script>
 
   
 tests({
-  'It should add the correct number of zeros when number of decimal places is increased':function(){
-    eq(toFixed(100,2),"100.00"); 
+  'It should add the correct number of zeros when number of decimal places is increased':function() {
+    eq(toFixed(100,2), "100.00"); 
   },
-  'It should round the last decimal place up as needed':function(){
+  'It should round the last decimal place up as needed':function() {
     eq(toFixed(100.35,1), "100.4");
     eq(toFixed(100.365455,1), "100.4");
     eq(toFixed(100.365455,5), "100.36546");
   },
-  'It should shorten the decimal places to the length requested by precision':function(){
-    eq(toFixed(100.365453,5),"100.36545");
+  'It should shorten the decimal places to the length requested by precision':function() {
+    eq(toFixed(100.365453,5), "100.36545");
   },
-  'It should remove the decimals when precision is 0':function(){
-    eq(toFixed(100.365457,0),"100"); 
+  'It should remove the decimals when precision is 0':function() {
+    eq(toFixed(100.365457,0), "100"); 
   },
-  'It should round up the last integer of the whole number as need':function(){
-    eq(toFixed(100.5,0),"101");
+  'It should round up the last integer of the whole number as need':function() {
+    eq(toFixed(100.5,0), "101");
   },
-  'It should work correctly with decimal numbers':function(){
-    eq(toFixed(0.365457,0),"0");
-    eq(toFixed(0.565457,0),"1");
-    eq(toFixed(.565457,0),"1" );
+  'It should work correctly with decimal numbers':function() {
+    eq(toFixed(0.365457,0), "0");
+    eq(toFixed(0.565457,0), "1");
+    eq(toFixed(.565457,0), "1" );
   },
-  'It should pass accounting.toFixed() edge cases':function(){
+  'It should pass accounting.toFixed() edge cases':function() {
     eq(toFixed(0.615, 2), "0.62");
-    eq(toFixed(10.235,2),"10.24");
-    eq(toFixed(1.005e2,1),"100.5");
-    eq(toFixed((1.005*100),1),"100.5");
+    eq(toFixed(10.235,2), "10.24");
+    eq(toFixed(1.005e2,1), "100.5");
+    eq(toFixed((1.005*100),1), "100.5");
   },
-  'It should round 9 correctly': function(){
-    eq(toFixed((1.005*100),2),"100.50");
+  'It should round 9 correctly': function() {
+    eq(toFixed((1.005*100),2), "100.50");
   },
-  'It should work with negative numbers':function(){
-    eq(toFixed(-100,2),"-100.00"); 
+  'It should work with negative numbers':function() {
+    eq(toFixed(-100,2), "-100.00"); 
     eq(toFixed(-100.35,1), "-100.4");
     eq(toFixed(-100.365455,1), "-100.4");
     eq(toFixed(-100.365455,5), "-100.36546");
-    eq(toFixed(-100.365453,5),"-100.36545");
-    eq(toFixed(-100.365457,0),"-100"); 
-    eq(toFixed(-100.5,0),"-101");
-    eq(toFixed(-0.365457,0),"0");
-    eq(toFixed(-0.565457,0),"-1");
-    eq(toFixed(-.565457,0),"-1" );
+    eq(toFixed(-100.365453,5), "-100.36545");
+    eq(toFixed(-100.365457,0), "-100"); 
+    eq(toFixed(-100.5,0), "-101");
+    eq(toFixed(-0.365457,0), "0");
+    eq(toFixed(-0.565457,0), "-1");
+    eq(toFixed(-.565457,0), "-1" );
     eq(toFixed(-0.615, 2), "-0.62");
-    eq(toFixed(-10.235,2),"-10.24");
-    eq(toFixed(-1.005e2,1),"-100.5");
-    eq(toFixed((-1.005*100),1),"-100.5");
-    eq(toFixed((-1.005*100),2),"-100.50");
+    eq(toFixed(-10.235,2), "-10.24");
+    eq(toFixed(-1.005e2,1), "-100.5");
+    eq(toFixed((-1.005*100),1), "-100.5");
+    eq(toFixed((-1.005*100),2), "-100.50");
   }
  
 });
