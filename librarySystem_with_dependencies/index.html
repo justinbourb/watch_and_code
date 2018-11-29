@@ -1,38 +1,34 @@
 <html>
-  
-
-<head>
-
-  <script src="/script.js"></script>  
-  <script src="/jstinytest_dom_edition.js"></script>
-    
-</head>
-  </html>
+  <head>
+    <script src="/script.js"></script>  
+    <script src="/jstinytest_dom_edition.js"></script>
+  </head>
+</html>
 <script>
   
 tests({
 
-  'accepts an empty array for dependencies':function(){
+  'accepts an empty array for dependencies':function() {
     lS('name', [], function() {
           return 'Gordon';
         });
     eq('Gordon', lS('name'));
   },
-  'accepts an empty string for dependencies':function(){
+  'accepts an empty string for dependencies':function (){
     lS('name', "", function() {
           return 'Gordon';
         });
     eq('Gordon', lS('name'));
   },
-  'accepts no dependencies provided':function(){
+  'accepts no dependencies provided':function (){
     lS('no_dependency', function() {
           return 'Gordon';
         })
     eq('Gordon', lS('no_dependency'));
     
   },
-  'accepts an array of dependencies regardless of length':function(){
-   lS('company', [], function() {
+  'accepts an array of dependencies regardless of length':function() {
+    lS('company', [], function() {
       return 'Watch and Code';
     });
 
@@ -41,8 +37,7 @@ tests({
     }); 
     eq('Gordon works at Watch and Code', lS('workBlurb'));
   },
-  'accepts an array of dependencies created out of order':function(){
-   
+  'accepts an array of dependencies created out of order':function() {
     lS('workBlurb1', ['name1', 'company1'], function(name, company) {
       return name + ' works at ' + company;
     }); 
@@ -56,24 +51,24 @@ tests({
         });
     eq('Gordon works at Watch and Code', lS('workBlurb1'));
   },
-  'accepts dependency provided as a string':function(){
-   lS('test', 'name', function(name){
+  'accepts dependency provided as a string':function() {
+    lS('test', 'name', function(name) {
       return 'test ' + name;
     });
     eq('test Gordon', lS('test'));
   },
-  'recursively checks sub-dependencies':function(){
-    lS('recursive',['level1','secondlevel1'],function(){});
-    lS('level1',['level2'],function(){});
+  'recursively checks sub-dependencies':function() {
+    lS('recursive', ['level1','secondlevel1'], function() {});
+    lS('level1', ['level2'], function() {});
     eq('Dependencies not loaded: level2, secondlevel1', lS('recursive'));
   },
-  'provides an error message when not called correctly':function(){
+  'provides an error message when not called correctly':function() {
     eq(`Error: Improper format used.  
         To store: lS('name'[,dependency], function);
         To call : lS('name');`, lS('test', 'name'));
   },
-  'provides an error message when missing dependencies':function(){
-    lS('test', 'name2', function(name){
+  'provides an error message when missing dependencies':function() {
+    lS('test', 'name2', function(name) {
       return 'test ' + name;
     });
     eq("Dependencies not loaded: name2", lS('test'));
