@@ -10,20 +10,20 @@ tests({
 
   'accepts an empty array for dependencies':function() {
     lS('name', [], function() {
-          return 'Gordon';
-        });
+      return 'Gordon';
+    });
     eq('Gordon', lS('name'));
   },
-  'accepts an empty string for dependencies':function (){
+  'accepts an empty string for dependencies':function () {
     lS('name', "", function() {
-          return 'Gordon';
-        });
+      return 'Gordon';
+    });
     eq('Gordon', lS('name'));
   },
-  'accepts no dependencies provided':function (){
+  'accepts no dependencies provided':function () {
     lS('no_dependency', function() {
-          return 'Gordon';
-        })
+       return 'Gordon';
+    });
     eq('Gordon', lS('no_dependency'));
     
   },
@@ -31,7 +31,6 @@ tests({
     lS('company', [], function() {
       return 'Watch and Code';
     });
-
     lS('workBlurb', ['name', 'company'], function(name, company) {
       return name + ' works at ' + company;
     }); 
@@ -41,14 +40,12 @@ tests({
     lS('workBlurb1', ['name1', 'company1'], function(name, company) {
       return name + ' works at ' + company;
     }); 
-    
     lS('company1', [], function() {
       return 'Watch and Code';
     });
-    
     lS('name1', [], function() {
-          return 'Gordon';
-        });
+      return 'Gordon';
+    });
     eq('Gordon works at Watch and Code', lS('workBlurb1'));
   },
   'accepts dependency provided as a string':function() {
