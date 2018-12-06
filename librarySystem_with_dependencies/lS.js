@@ -41,7 +41,7 @@
    if (arguments.length > 1) {
     
     //creating a library       
-       //Case 1: dependency is given as an object
+      //Case 1: dependency is given as an object
       if (typeof(dependency) === "object" && typeof(callback) === "function") {
         dependency.forEach(function(element) {
           updated.push(store[element]);
@@ -50,7 +50,7 @@
         return
       }
     
-       //Case 2: dependency is given as a string and callback function is provided
+      //Case 2: dependency is given as a string and callback function is provided
       if (typeof(dependency) === "string" && typeof(callback) === "function") {
         store[name] = callback(store[dependency]);
         return
