@@ -10,13 +10,13 @@ tests({
   'accepts an empty array for dependencies':function() {
     lS('name', [], function() {
           return 'Gordon';
-        });
+    });
     eq('Gordon', lS('name'));
   },
   'accepts no dependencies provided':function(){
     lS('no_dependency', function() {
           return 'Gordon';
-        })
+    })
     eq('Gordon', lS('no_dependency'));
     
   },
