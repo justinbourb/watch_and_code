@@ -60,9 +60,9 @@
       if (typeof(dependency) === "object" && typeof(callback) === "function") {
         //case 1a1: dependency is provided
         if (dependency.length > 0) {
-        store[name] = {name: name, dependency: dependency, callback: callback, 
-                  callback_results: undefined};
-        return
+					store[name] = {name: name, dependency: dependency, callback: callback, 
+										callback_results: undefined};
+					return
         //case 1a2: lS is called with an empty array or string for dependency
         } else {
         store[name] = {name: name, dependency: dependency, callback: callback, 
