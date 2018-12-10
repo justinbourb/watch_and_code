@@ -39,7 +39,7 @@ function toFixed(value,precision) {
 	    
     } else {
       outputString = stringToRound.slice(0, posistionToRound-1) + (parseInt(stringToRound.slice(posistionToRound-1,posistionToRound))+1).toString();
-      return outputString
+      return outputString;
     }
   }
 	
@@ -49,7 +49,7 @@ function toFixed(value,precision) {
    for (let i = 0; i < precision; i++) {
        stringToAdd += "0"; 
    } 
-    return stringToAdd
+    return stringToAdd;
   }
   
   //error catching if no decimals provided
@@ -92,7 +92,7 @@ function toFixed(value,precision) {
       if (returnValue.length === 2 && returnValue[0] === "-" && returnValue[1] === "0") {
        returnValue = "0" 
       }
-      return returnValue
+      return returnValue;
 	    
     //Case 2b: rounding is required
     } else {
